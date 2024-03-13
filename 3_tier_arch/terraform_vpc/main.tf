@@ -10,6 +10,7 @@ resource "aws_subnet" "pub_web_bastion" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = "192.168.1.0/24"  
   availability_zone = "us-west-2a"
+  map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "priv_appserver" {
