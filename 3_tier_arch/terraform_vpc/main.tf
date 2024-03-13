@@ -6,7 +6,10 @@ provider "aws" {
 # Resource block for creating the VPC
 resource "aws_vpc" "three_tier_vpc" {
   cidr_block = "192.168.0.0/16" // Defines the CIDR block for the VPC
-  id         = "aws_vpc.main.id" // Assigns a custom ID for the VPC (not recommended to use)
+
+  tags = {
+    Name = "main_vpc" // Adds a tag with key "Name" and value "main"
+  }
 }
 
 # Resource block for creating the public subnet for web and bastion instances
