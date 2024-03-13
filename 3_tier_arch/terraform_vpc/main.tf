@@ -61,7 +61,7 @@ resource "aws_internet_gateway" "igw" {
 # Resource block for attaching the Internet Gateway to the VPC
 resource "aws_internet_gateway" "vpc_gw_attach" {
   vpc_id         = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to attach the Internet Gateway to
-  internet_gateway_id = aws_internet_gateway.igw.id // Specifies the Internet Gateway ID to attach to the VPC
+  
 }
 
 # Create a route table for the public subnet and associate it with the subnet
