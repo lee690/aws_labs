@@ -40,7 +40,7 @@ resource "aws_subnet" "priv_db_secondary-az2" {
 
 # Resource block for allocating an Elastic IP for NAT Gateway
 resource "aws_eip" "nat_eip" {
-  vpc = true // Indicates that the Elastic IP is associated with a VPC
+  domain = "vpc" // Indicates that the Elastic IP is associated with a VPC
 }
 
 # Resource block for creating a NAT Gateway
