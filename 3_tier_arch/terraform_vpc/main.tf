@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 # Resource block for creating the VPC
-resource "aws_vpc" "3_tier_vpc" {
+resource "aws_vpc" "three_tier_vpc" {
   cidr_block = "192.168.0.0/16" // Defines the CIDR block for the VPC
   id         = "aws_vpc.main.id" // Assigns a custom ID for the VPC (not recommended to use)
 }
@@ -51,18 +51,19 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 # Resource block for creating an Internet Gateway
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.3_tier_vpc.id // Specifies the VPC ID to attach the Internet Gateway to
+  // Specifies the VPC ID to attach the Internet Gateway to
+  vpc_id = aws_vpc.three_tier_vpc.id 
 }
 
 # Resource block for attaching the Internet Gateway to the VPC
 resource "aws_vpc_gateway_attachment" "vpc_gw_attach" {
-  vpc_id         = aws_vpc.3_tier_vpc.id // Specifies the VPC ID to attach the Internet Gateway to
+  vpc_id         = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to attach the Internet Gateway to
   internet_gateway_id = aws_internet_gateway.igw.id // Specifies the Internet Gateway ID to attach to the VPC
 }
 
 # Create a route table for the public subnet and associate it with the subnet
 resource "aws_route_table" "public_route_table" {
-  vpc_id = aws_vpc.3_tier_vpc.id
+  vpc_id = aws_vpc.three_tier_vpc.id
 }
 
 resource "aws_route" "public_route" {
@@ -78,7 +79,7 @@ resource "aws_route_table_association" "public_route_table_association" {
 
 # Create a route table for the private subnets and associate it with the subnets
 resource "aws_route_table" "private_route_table" {
-  vpc_id = aws_vpc.3_tier_vpc.id
+  vpc_id = aws_vpc.three_tier_vpc.id
 }
 
 resource "aws_route" "private_route" {
@@ -107,7 +108,7 @@ resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
   description = "Security group for the Bastion Host"
 
-  vpc_id = aws_vpc.3_tier_vpc.id
+  vpc_id = aws_vpc.three_tier_vpc.id
 
   ingress {
     from_port   = 22
@@ -129,7 +130,7 @@ resource "aws_security_group" "web_server_sg" {
   name        = "web-server-sg"
   description = "Security group for the web server"
 
-  vpc_id = aws_vpc.3_tier_vpc.id
+  vpc_id = aws_vpc.three_tier_vpc.id
 
   ingress {
     from_port   = 80
@@ -151,7 +152,7 @@ resource "aws_security_group" "app_server_sg" {
   name        = "app-server-sg"
   description = "Security group for the app server"
 
-  vpc_id = aws_vpc.3_tier_vpc.id
+  vpc_id = aws_vpc.three_tier_vpc.id
 
   ingress {
     from_port   = 8080
@@ -173,7 +174,7 @@ resource "aws_security_group" "database_sg" {
   name        = "database-sg"
   description = "Security group for the database"
 
-  vpc_id = aws_vpc.3_tier_vpc.id
+  vpc_id = aws_vpc.three_tier_vpc.id
 
   ingress {
     from_port   = 3306
