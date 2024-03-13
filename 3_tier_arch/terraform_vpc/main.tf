@@ -14,7 +14,7 @@ resource "aws_vpc" "three_tier_vpc" {
 
 # Resource block for creating the public subnet for web and bastion instances
 resource "aws_subnet" "pub_web_bastion" {
-  vpc_id            = aws_vpc.main.id // Specifies the VPC ID to associate the subnet with
+  vpc_id            = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to associate the subnet with
   cidr_block        = "192.168.1.0/24"  // Defines the CIDR block for the subnet
   availability_zone = "us-west-2a" // Specifies the availability zone for the subnet
   map_public_ip_on_launch = true // Indicates whether instances launched in this subnet should be assigned a public IP address automatically
@@ -22,21 +22,21 @@ resource "aws_subnet" "pub_web_bastion" {
 
 # Resource block for creating the private subnets for application servers
 resource "aws_subnet" "priv_appserver" {
-  vpc_id            = aws_vpc.main.id // Specifies the VPC ID to associate the subnet with
+  vpc_id            = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to associate the subnet with
   cidr_block        = "192.168.2.0/24" // Defines the CIDR block for the subnet
   availability_zone = "us-west-2a" // Specifies the availability zone for the subnet
 }
 
 # Resource block for creating the private subnet for primary database instances
 resource "aws_subnet" "priv_db_primary" {
-  vpc_id            = aws_vpc.main.id // Specifies the VPC ID to associate the subnet with
+  vpc_id            = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to associate the subnet with
   cidr_block        = "192.168.3.0/24" // Defines the CIDR block for the subnet
   availability_zone = "us-west-2a" // Specifies the availability zone for the subnet
 }
 
 # Resource block for creating the private subnet for secondary database instances in another AZ
 resource "aws_subnet" "priv_db_secondary-az2" {
-  vpc_id            = aws_vpc.main.id // Specifies the VPC ID to associate the subnet with
+  vpc_id            = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to associate the subnet with
   cidr_block        = "192.168.4.0/24" // Defines the CIDR block for the subnet
   availability_zone = "us-west-2b" // Specifies the availability zone for the subnet
 }
@@ -59,7 +59,7 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # Resource block for attaching the Internet Gateway to the VPC
-resource "aws_vpc_gateway_attachment" "vpc_gw_attach" {
+resource "aws_internet_gateway" "vpc_gw_attach" {
   vpc_id         = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to attach the Internet Gateway to
   internet_gateway_id = aws_internet_gateway.igw.id // Specifies the Internet Gateway ID to attach to the VPC
 }
