@@ -41,6 +41,12 @@ resource "aws_subnet" "priv_db_secondary-az2" {
   availability_zone = "us-west-2b" // Specifies the availability zone for the subnet
 }
 
+# Resource block for creating the DB subnet group
+resource "aws_db_subnet_group" "db_subnet_group" {
+  name       = "my-db-subnet-group"
+  subnet_ids = [aws_subnet.priv_db_primary.id, aws_subnet.priv_db_secondary-az2.id]
+}
+
 # Resource block for allocating an Elastic IP for NAT Gateway
 resource "aws_eip" "nat_eip" {
   domain = "vpc" // Indicates that the Elastic IP is associated with a VPC
@@ -111,7 +117,7 @@ resource "aws_security_group" "bastion_sg" {
   name        = "bastion-sg"
   description = "Security group for the Bastion Host"
 
-  vpc_id = aws_vpc.three_tier_vpc.id
+  vpc_id = "aws_vpc.three_tier_vpc.id"
 
   ingress {
     from_port   = 22
@@ -256,12 +262,6 @@ resource "aws_instance" "app_server" {
     sudo yum install -y mariadb-server
     sudo service mariadb start
     EOF
-}
-
-# Resource block for creating the DB subnet group
-resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "my-db-subnet-group"
-  subnet_ids = [aws_subnet.priv_db_primary.id, aws_subnet.priv_db_secondary-az2.id]
 }
 
 # Resource block for creating the DB instance
