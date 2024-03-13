@@ -30,3 +30,12 @@ resource "aws_subnet" "priv_db_secondary-az2" {
   cidr_block        = "192.168.4.0/24"
   availability_zone = "us-west-2b"
 }
+
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
+resource "aws_nat_gateway" "nat_gateway" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.pub_web_bastion.id
+}
