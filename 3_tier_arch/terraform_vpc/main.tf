@@ -64,12 +64,6 @@ resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.three_tier_vpc.id 
 }
 
-# Resource block for attaching the Internet Gateway to the VPC
-resource "aws_internet_gateway" "vpc_gw_attach" {
-  vpc_id         = aws_vpc.three_tier_vpc.id // Specifies the VPC ID to attach the Internet Gateway to
-  
-}
-
 # Create a route table for the public subnet and associate it with the subnet
 resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.three_tier_vpc.id
@@ -110,119 +104,6 @@ resource "aws_route_table_association" "private_route_table_association_2" {
 resource "aws_route_table_association" "private_route_table_association_3" {
   subnet_id      = aws_subnet.priv_db_secondary-az2.id
   route_table_id = aws_route_table.private_route_table.id
-}
-
-# Resource block for creating the security group for the Bastion Host
-resource "aws_security_group" "bastion_sg" {
-  name        = "bastion-sg"
-  description = "Security group for the Bastion Host"
-
-  vpc_id = "aws_vpc.three_tier_vpc.id"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Resource block for creating the security group for the web server
-resource "aws_security_group" "web_server_sg" {
-  name        = "web-server-sg"
-  description = "Security group for the web server"
-
-  vpc_id = aws_vpc.three_tier_vpc.id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Resource block for creating the security group for the app server
-resource "aws_security_group" "app_server_sg" {
-  name        = "app-server-sg"
-  description = "Security group for the app server"
-
-  vpc_id = aws_vpc.three_tier_vpc.id
-
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Resource block for creating the security group for the database
-resource "aws_security_group" "database_sg" {
-  name        = "database-sg"
-  description = "Security group for the database"
-
-  vpc_id = aws_vpc.three_tier_vpc.id
-
-  ingress {
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-# Add rules to security groups to link them together
-resource "aws_security_group_rule" "bastion_to_web_server" {
-  security_group_id        = aws_security_group.bastion_sg.id
-  source_security_group_id = aws_security_group.web_server_sg.id
-  from_port                = 22
-  to_port                  = 22
-  protocol                 = "tcp"
-}
-
-resource "aws_security_group_rule" "web_server_to_app_server" {
-  security_group_id        = aws_security_group.web_server_sg.id
-  source_security_group_id = aws_security_group.app_server_sg.id
-  from_port                = 8080
-  to_port                  = 8080
-  protocol                 = "tcp"
-}
-
-resource "aws_security_group_rule" "app_server_to_database" {
-  security_group_id        = aws_security_group.app_server_sg.id
-  source_security_group_id = aws_security_group.database_sg.id
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
 }
 
 # Resource block for creating the Bastion Host
