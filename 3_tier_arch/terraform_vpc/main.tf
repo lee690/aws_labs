@@ -111,7 +111,6 @@ resource "aws_instance" "bastion_host" {
   ami           = "ami-12345678" // Replace with the appropriate Amazon Linux 2 AMI ID
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.pub_web_bastion.id
-  vpc_security_group_ids = [aws_security_group.bastion_sg.id]
 }
 
 # Resource block for creating the web server EC2 instance
@@ -119,8 +118,6 @@ resource "aws_instance" "web_server" {
   ami           = "ami-12345678" // Replace with the appropriate Amazon Linux 2 AMI ID
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.pub_web_bastion.id
-  vpc_security_group_ids = [aws_security_group.web_server_sg.id]
-
   user_data = <<-EOF
     #!/bin/bash
     sudo yum update -y
@@ -136,7 +133,6 @@ resource "aws_instance" "app_server" {
   ami           = "ami-12345678" // Replace with the appropriate Amazon Linux 2 AMI ID
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.pub_web_bastion.id
-  vpc_security_group_ids = [aws_security_group.app_server_sg.id]
 
   user_data = <<-EOF
     #!/bin/bash
@@ -159,6 +155,5 @@ resource "aws_db_instance" "db_instance" {
   storage_encrypted      = false
   username               = "root"
   password               = "Re:Start!9"
-  name                   = "mydb"
 }
 
