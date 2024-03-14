@@ -1,2 +1,4 @@
 3_tier_arch/terraform_vpc/.terraform/
 3_tier_arch/terraform_vpc/.terraform.lock.hcl
+3_tier_arch/terraform_vpc/deployed_resources
+3_tier_arch/terraform_vpc/terraform.tfstate
